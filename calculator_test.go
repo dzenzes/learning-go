@@ -2,9 +2,14 @@ package calculator_test
 
 import (
 	"calculator"
+	"math"
 	"math/rand"
 	"testing"
 )
+
+func closeEnough(a, b, tolerance float64) bool {
+	return math.Abs(a-b) <= tolerance
+}
 
 type testCase struct {
 	a, b        float64
@@ -24,7 +29,7 @@ func TestAdd(t *testing.T) {
 
 	for _, tc := range testCases {
 		got := calculator.Add(tc.a, tc.b)
-		if tc.want != got {
+		if !closeEnough(tc.want, got, 0.0000001) {
 			t.Errorf("%s: Add(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
@@ -37,7 +42,7 @@ func TestAddRandom(t *testing.T) {
 		b := rand.Float64()
 		want := a + b
 		got := calculator.Add(a, b)
-		if want != got {
+		if !closeEnough(want, got, 0.0000001) {
 			t.Errorf("Add(%f, %f): want %f, got %f", a, b, want, got)
 		}
 	}
@@ -54,7 +59,7 @@ func TestSubtract(t *testing.T) {
 
 	for _, tc := range testCases {
 		got := calculator.Subtract(tc.a, tc.b)
-		if tc.want != got {
+		if !closeEnough(tc.want, got, 0.0000001) {
 			t.Errorf("%s: Subtract(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
@@ -70,7 +75,7 @@ func TestMultiply(t *testing.T) {
 
 	for _, tc := range testCases {
 		got := calculator.Multiply(tc.a, tc.b)
-		if tc.want != got {
+		if !closeEnough(tc.want, got, 0.0000001) {
 			t.Errorf("%s: Multiply(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
@@ -94,7 +99,7 @@ func TestDivide(t *testing.T) {
 			t.Fatalf("Divide(%f, %f): unexpected error status: %v", tc.a, tc.b, errReceived)
 		}
 
-		if !tc.errExpected && tc.want != got {
+		if !tc.errExpected && !closeEnough(tc.want, got, 0.0000001) {
 			t.Errorf("%s: Divide(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 		// The error value was as you expected, and the data value also matched expectation (pass)
