@@ -5,28 +5,57 @@ import (
 	"testing"
 )
 
+type testCase struct {
+	a, b float64
+	want float64
+	name string
+}
+
 func TestAdd(t *testing.T) {
 	t.Parallel()
-	var want float64 = 4
-	got := calculator.Add(2, 2)
-	if want != got {
-		t.Errorf("want %f, got %f", want, got)
+
+	testCases := []testCase{
+		{a: 2, b: 2, want: 4, name: "Normal case with two positive numbers"},
+		{a: 2, b: -1, want: 1, name: "Positive and negative number"},
+		{a: 5, b: 0, want: 5, name: "Adding zero to a number"},
+	}
+
+	for _, tc := range testCases {
+		got := calculator.Add(tc.a, tc.b)
+		if tc.want != got {
+			t.Errorf("%s: Add(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
+		}
 	}
 }
 
 func TestSubtract(t *testing.T) {
 	t.Parallel()
-	var want float64 = 2
-	got := calculator.Subtract(4, 2)
-	if want != got {
-		t.Errorf("want %f, got %f", want, got)
+	testCases := []testCase{
+		{a: 4, b: 2, want: 2, name: "Normal example with two positive numbers"},
+		{a: 1, b: 3, want: -2, name: "Subtracting a bigger number from the first number to get a negative result"},
+		{a: -1, b: -1, want: 0, name: "Subtracting two negative numbers"},
+	}
+
+	for _, tc := range testCases {
+		got := calculator.Subtract(tc.a, tc.b)
+		if tc.want != got {
+			t.Errorf("%s: Subtract(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
+		}
 	}
 }
 func TestMultiply(t *testing.T) {
 	t.Parallel()
-	var want float64 = 32
-	got := calculator.Multiply(6, 7)
-	if want != got {
-		t.Errorf("want %f, got %f", want, got)
+	testCases := []testCase{
+		{a: 4, b: 2, want: 8, name: "Normal example with positive numbers"},
+		{a: 1, b: -1, want: -1, name: "Multiply with one negative number"},
+		{a: -2, b: -2, want: 4, name: "Two negative numbers result in a positive result"},
+		{a: 4, b: 0, want: 0, name: "Using a zero results in a zero"},
+	}
+
+	for _, tc := range testCases {
+		got := calculator.Multiply(tc.a, tc.b)
+		if tc.want != got {
+			t.Errorf("%s: Multiply(%f, %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
+		}
 	}
 }
